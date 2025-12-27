@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { getTimingData, markPageStart } from '@/utils/timing'
+import { getTimingData, markPageStart, getInitializedFrom } from '@/utils/timing'
 
 
 const geistSans = Geist({
@@ -34,6 +34,7 @@ export default function RootLayout({
         <meta name="x-request-count" content={timingData.requestCount.toString()} />
         <meta name="x-is-cold-start" content={timingData.isColdStart.toString()} />
         <meta name="x-instance-init-time" content={timingData.instanceInitTime.toString()} />
+        <meta name="x-initialized-from" content={getInitializedFrom() || ''} />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

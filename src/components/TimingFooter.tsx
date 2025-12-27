@@ -8,6 +8,7 @@ interface TimingInfo {
   instanceAge: number
   pageProcessingTime: number
   startRender: number
+  initializedFrom: string | undefined
 }
 
 export default function TimingFooter() {
@@ -29,6 +30,7 @@ export default function TimingFooter() {
       instanceAge,
       pageProcessingTime,
       startRender,
+      initializedFrom: document.querySelector('meta[name="x-initialized-from"]')?.getAttribute('content') || undefined,
     }
   }, [mounted, startRender, instanceAge])
 
@@ -94,6 +96,9 @@ export default function TimingFooter() {
         </div>
         <div>
           Start Render Time: {timingInfo.startRender.toFixed(2)}ms
+        </div>
+        <div>
+          Initialized From: {timingInfo.initializedFrom || 'Unknown'}
         </div>
       </div>
     </div>
