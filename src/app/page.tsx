@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { BreedsResponse, FactsResponse } from "@/types/api";
 import { nameToSlug } from "@/utils/slug";
+import { getPageProcessingTime } from '@/utils/timing'
+import TimingFooter from "@/components/TimingFooter";
 
 async function getBreeds(): Promise<BreedsResponse> {
   const res = await fetch("https://dogapi.dog/api/v2/breeds", {
@@ -40,7 +42,10 @@ export default async function Home() {
 
   const topThreeBreeds = breedsData.data.slice(0, 3);
 
+  const processingTime = getPageProcessingTime()
   return (
+    <>
+    <meta name="x-page-processing-time" content={processingTime.toFixed(2)} />
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         <h1 className="text-4xl font-bold mb-8 text-zinc-900 dark:text-zinc-50">
@@ -106,7 +111,9 @@ export default async function Home() {
             ))}
           </div>
         </section>
+        <TimingFooter />
       </main>
     </div>
+    </>
   );
 }

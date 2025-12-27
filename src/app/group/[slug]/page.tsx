@@ -2,6 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { GroupsResponse, GroupResponse, BreedResponse, Breed } from "@/types/api";
 import { nameToSlug } from "@/utils/slug";
+import { getPageProcessingTime } from '@/utils/timing'
+import TimingFooter from "@/components/TimingFooter";
 
 async function getAllGroups(): Promise<GroupsResponse> {
   const res = await fetch(
@@ -84,7 +86,10 @@ export default async function GroupPage({
     breeds = breedResponses.map((response) => response.data);
   }
 
+  const processingTime = getPageProcessingTime()
   return (
+    <>
+    <meta name="x-page-processing-time" content={processingTime.toFixed(2)} />
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         <Link
@@ -130,8 +135,10 @@ export default async function GroupPage({
             </p>
           )}
         </section>
+        <TimingFooter />
       </main>
     </div>
+    </>
   );
 }
 

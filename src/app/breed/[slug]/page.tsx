@@ -2,6 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BreedsResponse, BreedResponse } from "@/types/api";
 import { nameToSlug } from "@/utils/slug";
+import { getPageProcessingTime } from '@/utils/timing'
+import TimingFooter from "@/components/TimingFooter";
 
 async function getAllBreeds(): Promise<BreedsResponse> {
   const res = await fetch(
@@ -57,7 +59,10 @@ export default async function BreedPage({
   const breedData = await getBreedById(matchingBreed.id);
   const breed = breedData.data;
 
+  const processingTime = getPageProcessingTime()
   return (
+    <>
+    <meta name="x-page-processing-time" content={processingTime.toFixed(2)} />
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         <Link
@@ -132,8 +137,10 @@ export default async function BreedPage({
             View All Breeds
           </Link>
         </div>
+        <TimingFooter />
       </main>
     </div>
+    </>
   );
 }
 

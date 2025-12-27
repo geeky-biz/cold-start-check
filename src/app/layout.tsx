@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { getTimingData, markPageStart } from '@/utils/timing'
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,8 +24,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  markPageStart()
+  const timingData = getTimingData()
+  // Initialize request counter (works for all pages)
+  
   return (
     <html lang="en">
+      <head>
+        <meta name="x-request-count" content={timingData.requestCount.toString()} />
+        <meta name="x-is-cold-start" content={timingData.isColdStart.toString()} />
+        <meta name="x-instance-init-time" content={timingData.instanceInitTime.toString()} />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
