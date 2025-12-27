@@ -7,38 +7,53 @@ interface TimingInfo {
   requestCount: number
   instanceAge: number
   pageProcessingTime: number
-  clientTTFB: number
+  startRender: number
 }
 
 export default function TimingFooter() {
-  const [clientTTFB, setClientTTFB] = useState(0)
+  const [mounted, setMounted] = useState(false)
+  const [startRender, setStartRender] = useState(0)
+  const [instanceAge, setInstanceAge] = useState(0)
 
   // Calculate timing data from meta tags (doesn't need to be in state)
   const timingInfo = useMemo<TimingInfo | null>(() => {
-    if (typeof window === 'undefined') return null
+    if (!mounted || typeof window === 'undefined') return null
 
     const isColdStart = document.querySelector('meta[name="x-is-cold-start"]')?.getAttribute('content') === 'true'
     const requestCount = parseInt(document.querySelector('meta[name="x-request-count"]')?.getAttribute('content') || '0')
-    const instanceInitTime = parseInt(document.querySelector('meta[name="x-instance-init-time"]')?.getAttribute('content') || '0')
     const pageProcessingTime = parseFloat(document.querySelector('meta[name="x-page-processing-time"]')?.getAttribute('content') || '0')
-    
-    const instanceAge = Date.now() - instanceInitTime
 
     return {
       isColdStart,
       requestCount,
       instanceAge,
       pageProcessingTime,
-      clientTTFB,
+      startRender,
     }
-  }, [clientTTFB])
+  }, [mounted, startRender, instanceAge])
 
-  // Get client-side TTFB separately (only needs to run once)
+  // Mark component as mounted after hydration
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Calculate instance age separately (only needs to run once)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const instanceInitTime = parseInt(document.querySelector('meta[name="x-instance-init-time"]')?.getAttribute('content') || '0')
+      if (instanceInitTime > 0) {
+        setInstanceAge(Date.now() - instanceInitTime)
+      }
+    }
+  }, [])
+
+  // Get start-render time separately (only needs to run once)
   useEffect(() => {
     if (typeof window !== 'undefined' && window.performance) {
       const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming
-      if (navigation) {
-        setClientTTFB(navigation.responseStart - navigation.requestStart)
+      if (navigation && navigation.domInteractive > 0) {
+        // Start-render is measured as time from fetch start to when DOM becomes interactive
+        setStartRender(navigation.domInteractive - navigation.fetchStart)
       }
     }
   }, [])
@@ -78,7 +93,7 @@ export default function TimingFooter() {
           Server-side Page Processing Time: {timingInfo.pageProcessingTime.toFixed(2)}ms
         </div>
         <div>
-          Browser-side TTFB Time: {timingInfo.clientTTFB.toFixed(2)}ms
+          Start Render Time: {timingInfo.startRender.toFixed(2)}ms
         </div>
       </div>
     </div>
