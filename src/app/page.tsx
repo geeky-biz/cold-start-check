@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { BreedsResponse, FactsResponse } from "@/types/api";
 import { nameToSlug } from "@/utils/slug";
 import { getPageProcessingTime } from '@/utils/timing'
@@ -54,18 +53,18 @@ export default async function Home() {
 
         {/* Navigation */}
         <nav className="mb-8 flex gap-4">
-          <Link
+          <a
             href="/breed"
             className="px-4 py-2 bg-zinc-800 text-white rounded hover:bg-zinc-700 transition-colors"
           >
             All Breeds
-          </Link>
-          <Link
+          </a>
+          <a
             href="/group"
             className="px-4 py-2 bg-zinc-800 text-white rounded hover:bg-zinc-700 transition-colors"
           >
             All Groups
-          </Link>
+          </a>
         </nav>
 
         {/* Top 3 Breeds */}
@@ -79,12 +78,12 @@ export default async function Home() {
                 key={breed.id}
                 className="bg-white dark:bg-zinc-800 p-6 rounded-lg shadow-md"
               >
-                <Link
+                <a
                   href={`/breed/${nameToSlug(breed.attributes.name)}`}
                   className="text-xl font-semibold text-blue-600 dark:text-blue-400 hover:underline"
                 >
                   {breed.attributes.name}
-                </Link>
+                </a>
                 <p className="mt-2 text-zinc-700 dark:text-zinc-300">
                   {breed.attributes.description}
                 </p>

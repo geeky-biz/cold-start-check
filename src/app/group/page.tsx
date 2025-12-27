@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { GroupsResponse } from "@/types/api";
 import { nameToSlug } from "@/utils/slug";
 import { getPageProcessingTime } from '@/utils/timing'
@@ -43,12 +42,12 @@ export default async function GroupsPage({
     <meta name="x-page-processing-time" content={processingTime.toFixed(2)} />
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">
       <main className="container mx-auto px-4 py-8 max-w-4xl">
-        <Link
+        <a
           href="/"
           className="inline-block mb-6 text-blue-600 dark:text-blue-400 hover:underline"
         >
           ← Back to Home
-        </Link>
+        </a>
 
         <h1 className="text-4xl font-bold mb-8 text-zinc-900 dark:text-zinc-50">
           All Dog Groups
@@ -60,12 +59,12 @@ export default async function GroupsPage({
               key={group.id}
               className="bg-white dark:bg-zinc-800 p-6 rounded-lg shadow-md"
             >
-              <Link
+              <a
                 href={`/group/${nameToSlug(group.attributes.name)}`}
                 className="text-xl font-semibold text-blue-600 dark:text-blue-400 hover:underline"
               >
                 {group.attributes.name}
-              </Link>
+              </a>
             </div>
           ))}
         </div>
@@ -73,12 +72,12 @@ export default async function GroupsPage({
         {/* Pagination */}
         <div className="flex justify-center items-center gap-4">
           {currentPage > 1 && (
-            <Link
+            <a
               href={`/group?page=${currentPage - 1}`}
               className="px-4 py-2 bg-zinc-800 text-white rounded hover:bg-zinc-700 transition-colors"
             >
               Previous
-            </Link>
+            </a>
           )}
 
           <span className="text-zinc-900 dark:text-zinc-50">
@@ -86,12 +85,12 @@ export default async function GroupsPage({
           </span>
 
           {hasNextPage && (
-            <Link
+            <a
               href={`/group?page=${currentPage + 1}`}
               className="px-4 py-2 bg-zinc-800 text-white rounded hover:bg-zinc-700 transition-colors"
             >
               Next
-            </Link>
+            </a>
           )}
         </div>
         <TimingFooter />

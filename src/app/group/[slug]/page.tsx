@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { GroupsResponse, GroupResponse, BreedResponse, Breed } from "@/types/api";
 import { nameToSlug } from "@/utils/slug";
@@ -92,12 +91,12 @@ export default async function GroupPage({
     <meta name="x-page-processing-time" content={processingTime.toFixed(2)} />
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">
       <main className="container mx-auto px-4 py-8 max-w-4xl">
-        <Link
+        <a
           href="/group"
           className="inline-block mb-6 text-blue-600 dark:text-blue-400 hover:underline"
         >
           ← Back to All Groups
-        </Link>
+        </a>
 
         <div className="bg-white dark:bg-zinc-800 p-8 rounded-lg shadow-lg mb-8">
           <h1 className="text-4xl font-bold mb-6 text-zinc-900 dark:text-zinc-50">
@@ -117,12 +116,12 @@ export default async function GroupPage({
                   key={breed.id}
                   className="bg-white dark:bg-zinc-800 p-6 rounded-lg shadow-md"
                 >
-                  <Link
+                  <a
                     href={`/breed/${nameToSlug(breed.attributes.name)}`}
                     className="text-xl font-semibold text-blue-600 dark:text-blue-400 hover:underline"
                   >
                     {breed.attributes.name}
-                  </Link>
+                  </a>
                   <p className="mt-2 text-zinc-700 dark:text-zinc-300">
                     {breed.attributes.description}
                   </p>

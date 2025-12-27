@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BreedsResponse, BreedResponse } from "@/types/api";
 import { nameToSlug } from "@/utils/slug";
@@ -65,12 +64,12 @@ export default async function BreedPage({
     <meta name="x-page-processing-time" content={processingTime.toFixed(2)} />
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">
       <main className="container mx-auto px-4 py-8 max-w-4xl">
-        <Link
+        <a
           href="/"
           className="inline-block mb-6 text-blue-600 dark:text-blue-400 hover:underline"
         >
           ← Back to Home
-        </Link>
+        </a>
 
         <div className="bg-white dark:bg-zinc-800 p-8 rounded-lg shadow-lg">
           <h1 className="text-4xl font-bold mb-6 text-zinc-900 dark:text-zinc-50">
@@ -130,12 +129,12 @@ export default async function BreedPage({
         </div>
 
         <div className="mt-6">
-          <Link
+          <a
             href="/breed"
             className="inline-block px-4 py-2 bg-zinc-800 text-white rounded hover:bg-zinc-700 transition-colors"
           >
             View All Breeds
-          </Link>
+          </a>
         </div>
         <TimingFooter />
       </main>
