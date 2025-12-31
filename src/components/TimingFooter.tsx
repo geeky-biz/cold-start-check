@@ -81,23 +81,23 @@ export default function TimingFooter() {
     >
       <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
         <div>
-          <strong style={{ color: timingInfo.isColdStart ? '#ff9800' : '#4CAF50' }}>
+          <strong id="cold-start-indicator" style={{ color: timingInfo.isColdStart ? '#ff9800' : '#4CAF50' }}>
             {timingInfo.isColdStart ? '🥶 COLD START' : '🔥 WARM'}
           </strong>
         </div>
-        <div>
+        <div id="request-count">
           Request #{timingInfo.requestCount}
         </div>
-        <div>
+        <div id="instance-age">
           Instance Age: {(timingInfo.instanceAge / 1000).toFixed(2)}s
         </div>
-        <div>
+        <div id="page-processing-time">
           Server-side Page Processing Time: {timingInfo.pageProcessingTime.toFixed(2)}ms
         </div>
-        <div>
+        <div id="start-render-time">
           Start Render Time: {timingInfo.startRender.toFixed(2)}ms
         </div>
-        <div>
+        <div id="initialized-from">
           Initialized From: {timingInfo.initializedFrom || 'Unknown'}
         </div>
       </div>
