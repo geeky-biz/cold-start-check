@@ -4,6 +4,7 @@ import { nameToSlug } from "@/utils/slug";
 import { getPageProcessingTime } from '@/utils/timing'
 import TimingFooter from "@/components/TimingFooter";
 import { runThreeServerSide } from "./_three";
+import { runXlsxServerSide } from "./_xlsx";
 
 async function getAllBreeds(): Promise<BreedsResponse> {
   const res = await fetch(
@@ -45,6 +46,7 @@ export default async function BreedPage({
 }) {
   const { slug } = await params;
   const result = runThreeServerSide();
+  const xlsxResult = runXlsxServerSide();
   // Get all breeds to find the one matching the slug
   const breedsData = await getAllBreeds();
   const matchingBreed = breedsData.data.find(
@@ -141,6 +143,12 @@ export default async function BreedPage({
           <main className="container mx-auto px-4 py-8 max-w-4xl">
             <h2>Three.js Result JSON</h2>
             <pre>{JSON.stringify(result, null, 2)}</pre>
+          </main>
+        </div>
+        <div className="bg-zinc-50 dark:bg-zinc-900">
+          <main className="container mx-auto px-4 py-8 max-w-4xl">
+            <h2>XLSX Result JSON</h2>
+            <pre>{JSON.stringify(xlsxResult, null, 2)}</pre>
           </main>
         </div>
         <TimingFooter />
