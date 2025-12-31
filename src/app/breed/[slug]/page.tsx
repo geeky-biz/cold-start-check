@@ -3,6 +3,27 @@ import { BreedsResponse, BreedResponse } from "@/types/api";
 import { nameToSlug } from "@/utils/slug";
 import { getPageProcessingTime } from '@/utils/timing'
 import TimingFooter from "@/components/TimingFooter";
+import * as THREE from "three";
+
+function runThreeServerSide() {
+  // Pure math / scene graph usage — SSR safe
+  const geometry = new THREE.BoxGeometry(1, 1, 1);
+  const material = new THREE.MeshBasicMaterial();
+  const mesh = new THREE.Mesh(geometry, material);
+
+  // Do some real work so bundler + runtime can't optimize it away
+  let sum = 0;
+  const pos = geometry.attributes.position.array as Float32Array;
+
+  for (let i = 0; i < pos.length; i++) {
+    sum += pos[i];
+  }
+
+  return {
+    vertexCount: geometry.attributes.position.count,
+    checksum: Math.round(sum * 1_000),
+  };
+}
 
 async function getAllBreeds(): Promise<BreedsResponse> {
   const res = await fetch(
@@ -43,7 +64,7 @@ export default async function BreedPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-
+  const result = runThreeServerSide();
   // Get all breeds to find the one matching the slug
   const breedsData = await getAllBreeds();
   const matchingBreed = breedsData.data.find(
@@ -135,6 +156,12 @@ export default async function BreedPage({
           >
             View All Breeds
           </a>
+        </div>
+        <div className="bg-zinc-50 dark:bg-zinc-900">
+          <main className="container mx-auto px-4 py-8 max-w-4xl">
+            <h2>Three.js Result JSON</h2>
+            <pre>{JSON.stringify(result, null, 2)}</pre>
+          </main>
         </div>
         <TimingFooter />
       </main>
