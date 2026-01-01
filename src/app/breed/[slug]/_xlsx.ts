@@ -1,4 +1,5 @@
 import * as XLSX from "xlsx";
+import { isCloudflare } from "@/utils/platform";
 
 /**
  * Server Component by default (no "use client").
@@ -6,6 +7,11 @@ import * as XLSX from "xlsx";
  */
 
 export function runXlsxServerSide() {
+  // Skip on Cloudflare to avoid compatibility issues
+  if (isCloudflare()) {
+    return null;
+  }
+
   // Create a workbook
   const workbook = XLSX.utils.book_new();
 
