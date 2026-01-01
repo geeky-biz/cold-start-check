@@ -8,10 +8,10 @@
     "start": "next start",
     "lint": "eslint",
     "cloudflare:build": "npx @opennextjs/cloudflare build",
-    "cloudflare:logs": "wrangler pages deployment tail --project-name=cold-start-check",
-    "cloudflare:logs:live": "wrangler pages deployment tail --project-name=cold-start-check --format=pretty",
+    "cloudflare:dev": "pnpm cloudflare:build && wrangler pages dev .open-next --compatibility-date=2024-12-01 --compatibility-flag=nodejs_compat",
+    "cloudflare:preview": "wrangler pages deploy .open-next --project-name=cold-start-check",
     "cloudflare:deployments": "wrangler pages deployment list --project-name=cold-start-check",
-    "cloudflare:tail": "wrangler tail"
+    "cloudflare:tail": "wrangler pages deployment tail --project-name=cold-start-check"
   },
   "dependencies": {
     "mathjs": "^15.1.0",
