@@ -1,6 +1,7 @@
 import { create, all } from "mathjs";
 import users from "@/data/benchmark-users.json";
 import type { BenchmarkUser } from "@/types/api";
+import { getTimingData, getInitializedFrom } from "@/utils/timing";
 
 export const runtime = "nodejs";
 
@@ -18,6 +19,7 @@ function scoreUser(u: BenchmarkUser): number {
 
 export async function GET() {
   const start = Date.now();
+  const timingData = getTimingData();
 
   let total = 0;
 
@@ -25,10 +27,16 @@ export async function GET() {
     total += scoreUser(users[i]);
   }
 
+  const processingTime = Date.now() - start;
+
   return Response.json({
     workload: "compute-like (mathjs)",
     usersProcessed: users.length,
     totalScore: Math.round(total),
-    durationMs: Date.now() - start,
+    "x-page-processing-time": processingTime,
+    "x-request-count": timingData.requestCount,
+    "x-is-cold-start": timingData.isColdStart,
+    "x-instance-age": ((Date.now() - timingData.instanceInitTime)/1000).toFixed(2)+'s',
+    "x-initialized-from": getInitializedFrom() || "",
   });
 }
