@@ -20,13 +20,17 @@ export async function GET(request: Request) {
   const processingTime = Date.now() - start;
 
   return Response.json({
-    workload: "db-like",
-    totalRows: dataset.length,
-    returnedRows: rows.length,
-    "x-page-processing-time": processingTime,
-    "x-request-count": timingData.requestCount,
-    "x-is-cold-start": timingData.isColdStart,
-    "x-instance-age": ((Date.now() - timingData.instanceInitTime)/1000).toFixed(2)+'s',
-    "x-initialized-from": getInitializedFrom() || "",
+    data : {
+        workload: "db-like",
+        totalRows: dataset.length,
+        returnedRows: rows.length,    
+    },
+    timing : {
+      "x-page-processing-time": processingTime,
+      "x-request-count": timingData.requestCount,
+      "x-is-cold-start": timingData.isColdStart,
+      "x-instance-age": ((Date.now() - timingData.instanceInitTime)/1000).toFixed(2)+'s',
+      "x-initialized-from": getInitializedFrom() || ""  
+    }
   });
 }

@@ -30,13 +30,17 @@ export async function GET() {
   const processingTime = Date.now() - start;
 
   return Response.json({
-    workload: "compute-like (mathjs)",
-    usersProcessed: users.length,
-    totalScore: Math.round(total),
-    "x-page-processing-time": processingTime,
-    "x-request-count": timingData.requestCount,
-    "x-is-cold-start": timingData.isColdStart,
-    "x-instance-age": ((Date.now() - timingData.instanceInitTime)/1000).toFixed(2)+'s',
-    "x-initialized-from": getInitializedFrom() || "",
+    data : {
+      workload: "compute-like (mathjs)",
+      usersProcessed: users.length,
+      totalScore: Math.round(total)  
+    },
+    timing : {
+      "x-page-processing-time": processingTime,
+      "x-request-count": timingData.requestCount,
+      "x-is-cold-start": timingData.isColdStart,
+      "x-instance-age": ((Date.now() - timingData.instanceInitTime)/1000).toFixed(2)+'s',
+      "x-initialized-from": getInitializedFrom() || ""
+    }
   });
 }
