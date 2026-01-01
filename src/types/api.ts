@@ -103,3 +103,11 @@ export interface GroupResponse {
   included?: Breed[];
 }
 
+export interface BenchmarkUser {
+  id: number;
+  age: number;
+  country: string;
+  purchases: number;
+  score: number;
+}
+
