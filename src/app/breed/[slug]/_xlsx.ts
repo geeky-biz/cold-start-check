@@ -21,15 +21,16 @@ export function runXlsxServerSide() {
   // Append worksheet to workbook
   XLSX.utils.book_append_sheet(workbook, worksheet, "Benchmark");
 
-  // Serialize workbook to a buffer (server-only operation)
-  const buffer = XLSX.write(workbook, {
-    type: "buffer",
+  // Serialize workbook - use "array" for Cloudflare Workers compatibility
+  // "buffer" requires Node.js Buffer API which isn't available in Workers
+  const array = XLSX.write(workbook, {
+    type: "array",
     bookType: "xlsx",
   });
 
   return {
     rows: data.length,
     sheetNames: workbook.SheetNames,
-    bufferSizeBytes: buffer.byteLength,
+    bufferSizeBytes: array.byteLength || array.length,
   };
 }

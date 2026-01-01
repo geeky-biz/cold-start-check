@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "cloudflare:build": "npx @opennextjs/cloudflare build"
+    "cloudflare:build": "npx @opennextjs/cloudflare build",
+    "cloudflare:logs": "wrangler pages deployment tail --project-name=cold-start-check",
+    "cloudflare:logs:live": "wrangler pages deployment tail --project-name=cold-start-check --format=pretty",
+    "cloudflare:deployments": "wrangler pages deployment list --project-name=cold-start-check",
+    "cloudflare:tail": "wrangler tail"
   },
   "dependencies": {
     "mathjs": "^15.1.0",

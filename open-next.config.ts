@@ -4,4 +4,10 @@ import r2IncrementalCache from "@opennextjs/cloudflare/overrides/incremental-cac
 
 export default defineCloudflareConfig({
 	incrementalCache: r2IncrementalCache,
+	// Cloudflare Workers compatibility settings
+	override: {
+		asyncRequestContext: true,
+		// Use Cloudflare-compatible implementations
+		convertHeaders: true,
+	},
 });
