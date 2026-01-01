@@ -1,56 +1,77 @@
-import { readFileSync } from 'fs';
-import { join } from 'path';
+// Import all data from the centralized data index
+import {
+  breedsData,
+  breedsPage1Data,
+  breedsAllData,
+  factsData,
+  groupsPage1Data,
+  groupsAllData,
+  groupDataMap,
+} from "@/data";
 
 /**
- * Maps API URLs to local JSON file paths
+ * Maps API URLs to JSON data
  */
-function getJsonFilePath(url: string): string | null {
+function getJsonData(url: string): unknown | null {
   const urlObj = new URL(url);
   const pathname = urlObj.pathname;
   const searchParams = urlObj.searchParams;
 
-  // Base data directory
-  const dataDir = join(process.cwd(), 'src', 'data');
-
-  // Map URL patterns to JSON files
+  // Map URL patterns to JSON data
   if (pathname === '/api/v2/breeds') {
     if (searchParams.has('page[number]') && searchParams.get('page[size]') === '10') {
-      return join(dataDir, 'breeds-page1.json');
+      return breedsPage1Data;
     }
     if (searchParams.get('page[size]') === '1000') {
-      return join(dataDir, 'breeds-all.json');
+      return breedsAllData;
     }
     // Default breeds endpoint
-    return join(dataDir, 'breeds.json');
+    return breedsData;
   }
 
   if (pathname === '/api/v2/facts') {
-    return join(dataDir, 'facts.json');
+    return factsData;
   }
 
   if (pathname === '/api/v2/groups') {
     if (searchParams.has('page[number]') && searchParams.get('page[size]') === '10') {
-      return join(dataDir, 'groups-page1.json');
+      return groupsPage1Data;
     }
     if (searchParams.get('page[size]') === '1000') {
-      return join(dataDir, 'groups-all.json');
+      return groupsAllData;
     }
-    // Default groups endpoint
-    return join(dataDir, 'groups.json');
+    // Default groups endpoint - use page1 for now
+    return groupsPage1Data;
   }
 
   // Individual breed by ID: /api/v2/breeds/{id}
   const breedMatch = pathname.match(/^\/api\/v2\/breeds\/([^/]+)$/);
   if (breedMatch) {
     const breedId = breedMatch[1];
-    return join(dataDir, `breed-${breedId}.json`);
+    // Extract breed from breedsAllData
+    const breed = (breedsAllData as { data?: Array<{ id: string }> }).data?.find((b) => b.id === breedId);
+    if (breed) {
+      return { data: breed };
+    }
+    return null;
   }
 
   // Individual group by ID: /api/v2/groups/{id}
   const groupMatch = pathname.match(/^\/api\/v2\/groups\/([^/]+)$/);
   if (groupMatch) {
     const groupId = groupMatch[1];
-    return join(dataDir, `group-${groupId}.json`);
+    // Get from the static import map
+    const groupData = groupDataMap[groupId];
+    if (groupData) {
+      return groupData;
+    }
+    // Fallback: try to find in groupsAllData
+    const group = (groupsAllData as { data?: Array<{ id: string }> }).data?.find((g) => g.id === groupId);
+    if (group) {
+      // Return group without included breeds (the code will fetch them separately if needed)
+      return { data: group, included: [] };
+    }
+    return null;
   }
 
   return null;
@@ -59,17 +80,18 @@ function getJsonFilePath(url: string): string | null {
 /**
  * Fake fetch implementation that reads from local JSON files
  * Mimics the fetch API interface
+ * Works in both Node.js and edge runtimes (Cloudflare Workers)
  */
 export async function fakeFetch(
   url: string | URL,
-  options?: RequestInit
+  _options?: RequestInit
 ): Promise<Response> {
   const urlString = typeof url === 'string' ? url : url.toString();
-  const jsonPath = getJsonFilePath(urlString);
+  const data = getJsonData(urlString);
 
-  if (!jsonPath) {
+  if (!data) {
     return new Response(
-      JSON.stringify({ error: `No JSON file mapped for URL: ${urlString}` }),
+      JSON.stringify({ error: `No JSON data mapped for URL: ${urlString}` }),
       {
         status: 404,
         statusText: 'Not Found',
@@ -79,9 +101,6 @@ export async function fakeFetch(
   }
 
   try {
-    const jsonContent = readFileSync(jsonPath, 'utf-8');
-    const data = JSON.parse(jsonContent);
-
     return new Response(JSON.stringify(data), {
       status: 200,
       statusText: 'OK',
@@ -92,7 +111,7 @@ export async function fakeFetch(
   } catch (error) {
     return new Response(
       JSON.stringify({
-        error: `Failed to read JSON file: ${jsonPath}`,
+        error: `Failed to process JSON data for URL: ${urlString}`,
         message: error instanceof Error ? error.message : String(error),
       }),
       {
@@ -103,4 +122,3 @@ export async function fakeFetch(
     );
   }
 }
-
