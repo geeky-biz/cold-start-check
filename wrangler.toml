@@ -1,7 +1,7 @@
 name = "cold-start-check"
 main = ".open-next/worker.js"
-compatibility_date = "2025-01-01"
-compatibility_flags = ["nodejs_compat"]
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat", "streams_enable_constructors"]
 
 [site]
 bucket = ".open-next/assets"
