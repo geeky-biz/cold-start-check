@@ -1,10 +1,14 @@
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 import { BreedsResponse } from "@/types/api";
 import { nameToSlug } from "@/utils/slug";
 import { getPageProcessingTime } from '@/utils/timing'
 import TimingFooter from "@/components/TimingFooter";
+import { fakeFetch } from "@/utils/fakeFetch";
 
 async function getBreeds(page: number = 1): Promise<BreedsResponse> {
-  const res = await fetch(
+  const res = await fakeFetch(
     `https://dogapi.dog/api/v2/breeds?page[number]=${page}&page[size]=10`,
     {
       cache: "no-store",

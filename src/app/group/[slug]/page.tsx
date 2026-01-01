@@ -1,11 +1,15 @@
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 import { notFound } from "next/navigation";
 import { GroupsResponse, GroupResponse, BreedResponse, Breed } from "@/types/api";
 import { nameToSlug } from "@/utils/slug";
 import { getPageProcessingTime } from '@/utils/timing'
 import TimingFooter from "@/components/TimingFooter";
+import { fakeFetch } from "@/utils/fakeFetch";
 
 async function getAllGroups(): Promise<GroupsResponse> {
-  const res = await fetch(
+  const res = await fakeFetch(
     "https://dogapi.dog/api/v2/groups?page[size]=1000",
     {
       cache: "no-store",
@@ -23,7 +27,7 @@ async function getAllGroups(): Promise<GroupsResponse> {
 }
 
 async function getGroupById(id: string): Promise<GroupResponse> {
-  const res = await fetch(`https://dogapi.dog/api/v2/groups/${id}?include=breeds`, {
+  const res = await fakeFetch(`https://dogapi.dog/api/v2/groups/${id}?include=breeds`, {
     cache: "no-store",
     headers: {
       "Content-Type": "application/json",
@@ -38,7 +42,7 @@ async function getGroupById(id: string): Promise<GroupResponse> {
 }
 
 async function getBreedById(id: string): Promise<BreedResponse> {
-  const res = await fetch(`https://dogapi.dog/api/v2/breeds/${id}`, {
+  const res = await fakeFetch(`https://dogapi.dog/api/v2/breeds/${id}`, {
     cache: "no-store",
     headers: {
       "Content-Type": "application/json",

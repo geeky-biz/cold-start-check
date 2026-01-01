@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 import { notFound } from "next/navigation";
 import { BreedsResponse, BreedResponse } from "@/types/api";
 import { nameToSlug } from "@/utils/slug";
@@ -5,9 +8,10 @@ import { getPageProcessingTime } from '@/utils/timing'
 import TimingFooter from "@/components/TimingFooter";
 import { runThreeServerSide } from "./_three";
 import { runXlsxServerSide } from "./_xlsx";
+import { fakeFetch } from "@/utils/fakeFetch";
 
 async function getAllBreeds(): Promise<BreedsResponse> {
-  const res = await fetch(
+  const res = await fakeFetch(
     "https://dogapi.dog/api/v2/breeds?page[size]=1000",
     {
       cache: "no-store",
@@ -25,7 +29,7 @@ async function getAllBreeds(): Promise<BreedsResponse> {
 }
 
 async function getBreedById(id: string): Promise<BreedResponse> {
-  const res = await fetch(`https://dogapi.dog/api/v2/breeds/${id}`, {
+  const res = await fakeFetch(`https://dogapi.dog/api/v2/breeds/${id}`, {
     cache: "no-store",
     headers: {
       "Content-Type": "application/json",

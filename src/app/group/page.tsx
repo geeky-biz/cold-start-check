@@ -1,10 +1,14 @@
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 import { GroupsResponse } from "@/types/api";
 import { nameToSlug } from "@/utils/slug";
 import { getPageProcessingTime } from '@/utils/timing'
 import TimingFooter from "@/components/TimingFooter";
+import { fakeFetch } from "@/utils/fakeFetch";
 
 async function getGroups(page: number = 1): Promise<GroupsResponse> {
-  const res = await fetch(
+  const res = await fakeFetch(
     `https://dogapi.dog/api/v2/groups?page[number]=${page}&page[size]=10`,
     {
       cache: "no-store",
