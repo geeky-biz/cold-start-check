@@ -8,14 +8,14 @@
     "start": "next start",
     "lint": "eslint",
     "cloudflare:build": "npx @opennextjs/cloudflare build",
-    "cloudflare:dev": "pnpm cloudflare:build && wrangler pages dev .open-next --compatibility-date=2024-12-01 --compatibility-flag=nodejs_compat",
+    "cloudflare:dev": "pnpm cloudflare:build && wrangler dev",
     "cloudflare:preview": "wrangler pages deploy .open-next --project-name=cold-start-check",
     "cloudflare:deployments": "wrangler pages deployment list --project-name=cold-start-check",
     "cloudflare:tail": "wrangler pages deployment tail --project-name=cold-start-check"
   },
   "dependencies": {
     "mathjs": "^15.1.0",
-    "next": "16.1.1",
+    "next": "16.0.10",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "three": "^0.182.0",
@@ -31,7 +31,7 @@
     "@types/react-dom": "^19",
     "@types/three": "^0.182.0",
     "eslint": "^9",
-    "eslint-config-next": "16.1.1",
+    "eslint-config-next": "16.0.10",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
