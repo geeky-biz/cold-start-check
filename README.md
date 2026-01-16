@@ -2,6 +2,9 @@
 
 A Next.js application designed to measure and monitor cold start performance across different serverless deployment platforms (Cloudflare Pages, Netlify, Vercel). This project serves as a benchmarking tool to understand how cold starts impact application performance in various edge and serverless environments.
 
+# Related blog post
+This Nextjs project is created to benchmark for cold starts. The outcomes are documented in [this blog post](https://punits.dev/blog/vercel-netlify-cloudflare-serverless-cold-starts/)
+
 ## Features
 
 - **Cold Start Detection**: Automatically detects and tracks cold start events
@@ -147,4 +150,4 @@ The `TimingFooter` component displays real-time metrics:
 
 ## License
 
-Private project - see package.json for details.
+MIT
